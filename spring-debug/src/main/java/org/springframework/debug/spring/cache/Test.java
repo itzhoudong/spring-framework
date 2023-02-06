@@ -11,12 +11,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  **/
 public class Test {
 	public static void main(String[] args) {
-
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
 		AService aService = applicationContext.getBean(AService.class);
 		System.out.println(aService.getbService());
 		BService bService = applicationContext.getBean(BService.class);
 		System.out.println(bService.getaService());
-
 	}
 }
