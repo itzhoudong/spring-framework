@@ -298,7 +298,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
-			// 标记beanName a是已经创建过至少一次的，它会一直存留在缓存中不会被移除(除非是抛异常)
+			// 如果不是只检查类型，那就标记这个Bean被创建了~~添加到缓存里 也就是所谓的  当前创建Bean池
 			// 参考缓存 Set<String> alreadyCreated = Collections.newSetFromMap(new ConcurrentHashMap<>(256))
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);

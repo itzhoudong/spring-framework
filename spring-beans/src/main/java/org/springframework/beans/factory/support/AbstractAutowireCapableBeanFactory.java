@@ -120,6 +120,8 @@ import java.util.function.Supplier;
  * @see RootBeanDefinition
  * @see DefaultListableBeanFactory
  * @see BeanDefinitionRegistry
+ *
+ * TODO 抽象方法createBean所在地  这个接口方法是属于抽象父类AbstractBeanFactory的   实现在这个抽象类里
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
 		implements AutowireCapableBeanFactory {
@@ -633,8 +635,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		try {
 			// TODO 此处注意(存在AOP): 如果此处自己被循环依赖了，那么它会走上面的getEarlyBeanReference，从而创建一个代理对象从三级缓存转移到二级缓存
 			//  注意此时对象还在二级缓存中，并没有在一级缓存中。并且此时可以知道exposedObject仍旧是普通对象
-			// 此时上面说到的getEarlyBeanReference方法就会被执行。这也解释了为何我们@Autowired是个代理对象，而不是普通对象根本原因
-			// 进行属性填充
+			//  此时上面说到的getEarlyBeanReference方法就会被执行。这也解释了为何我们@Autowired是个代理对象，而不是普通对象根本原因
+			//  进行属性填充
 			populateBean(beanName, mbd, instanceWrapper);
 			// 执行初始化回调方法
 			exposedObject = initializeBean(beanName, exposedObject, mbd);

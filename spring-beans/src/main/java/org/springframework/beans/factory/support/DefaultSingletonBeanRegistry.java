@@ -86,13 +86,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/** Names of beans that are currently in creation.
-	 *  这个缓存也十分重要，它表示bean创建过程中都会在里面呆着
-	 *  它在bean开始创建时放值，创建完成时会将其移出
+	 *  TODO 这个缓存也十分重要，它表示bean创建过程中都会在里面呆着
+	 *  	它在bean开始创建时放值，创建完成时会将其移出
 	 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
-	/** Names of beans currently excluded from in creation checks. */
+	/** Names of beans currently excluded from in creation checks. TODO 用于存储正在创建的Bean的名称 */
 	private final Set<String> inCreationCheckExclusions =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
 
@@ -183,7 +183,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 * @param allowEarlyReference whether early references should be created or not
 	 * @return the registered singleton object, or {@code null} if none found
 	 *
-	 * TODO 从容器中获取单例bean,没有就会创建bean
+	 * TODO getSingleton() 主要流程：1.先从一级缓存singletonObjects中获取bean，如果获取到直接return
+	 * 	2.如果获取不到或者对象正在创建中(isSingletonCurrentlyInCreation()),那就从二级缓存中获取earlySingletonObjects,如果获取到就直接return
+	 * 	3.如果还是获取不到，且允许singletonFactories(allowEarlyReference=true)通过getObject()获取，就从三级缓存singletonFactory.getObject()获取。
+	 * 		其实也就是从三级缓存移动(是剪贴，不是复制)到二级缓存
+	 * 	加入singletonFactories三级缓存的前提是执行了构造器，所以构造器的循环依赖是没法解决的
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
@@ -191,18 +195,24 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		// 从一级缓存中获取bean
 		Object singletonObject = this.singletonObjects.get(beanName);
 		// 如果没有获取到bean或者是bean正在创建
-		// isSingletonCurrentlyInCreation==false 表示还没有开始创建bean
+		// isSingletonCurrentlyInCreation==false 表示还没有开始创建bean,直接return
+		// isSingletonCurrentlyInCreation==true 表示正在创建bean,可以继续向下执行
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			// 从二级缓存中获取bean
+			// 从二级缓存中获取bean，二级缓存中保存的bean是已经完成实例化但还未完成属性填充的bean
 			singletonObject = this.earlySingletonObjects.get(beanName);
 			// allowEarlyReference==true 表示可以从三级缓存singletonFactories中获取bean
 			// allowEarlyReference==false 表示不可以从三级缓存singletonFactories中获取bean
 			if (singletonObject == null && allowEarlyReference) {
+				// 使用同步锁的目的是为了防止重复创建bean
 				synchronized (this.singletonObjects) {
 					// Consistent creation of early reference within full singleton lock
+					// 从一级缓存map中获取bean
 					singletonObject = this.singletonObjects.get(beanName);
+					// 如果没有从一级缓存中获取bean，就从二级缓存继续获取
 					if (singletonObject == null) {
+						// 从二级缓存map中获取bean
 						singletonObject = this.earlySingletonObjects.get(beanName);
+						// 如果没有从二级缓存中获取bean，就继续从三级缓存中获取
 						if (singletonObject == null) {
 							// 如果从三级缓存中获取到bean
 							ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
