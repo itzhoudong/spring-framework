@@ -15,6 +15,8 @@ public class Test {
 		AService aService = applicationContext.getBean(AService.class);
 		System.out.println(aService.getbService());
 		BService bService = applicationContext.getBean(BService.class);
+
+
 		System.out.println(bService.getaService());
 	}
 }
