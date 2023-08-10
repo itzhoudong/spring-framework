@@ -290,13 +290,11 @@ configure(allprojects) { project ->
 			cacheChangingModulesFor 0, "seconds"
 		}
 		repositories {
-			mavenLocal()
-			maven { url "https://maven.aliyun.com/repository/public" }
-			maven { url "https://maven.aliyun.com/repository/apache-snapshots" }
-			maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
-			maven { url "https://repo.springsource.org/plugins-release" }
-			maven { url "https://repo.spring.io/libs-spring-framework-build" }
 			mavenCentral()
+			maven { url "https://repo.spring.io/libs-spring-framework-build" }
+			maven { url "https://repo.spring.io/snapshot" }
+			maven { url 'https://maven.aliyun.com/nexus/content/groups/public/'}
+			maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter'}
 		}
 	}
 	configurations.all {
