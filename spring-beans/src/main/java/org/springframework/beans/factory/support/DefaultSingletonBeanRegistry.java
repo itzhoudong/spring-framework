@@ -169,6 +169,13 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		}
 	}
 
+	/**
+	 * @param beanName
+	 * @return: java.lang.Object
+	 * @description: TODO 调用了其重载的方法，allowEarlyReference == true 表示可以从三级缓存 singletonFactories 中获取 bean，allowEarlyReference == false 表示不允许从三级缓存 singletonFactories 中获取 bean，
+	 * @author: zhoudong
+	 * @date: 2023-09-12 22:34
+	 */
 	@Override
 	@Nullable
 	public Object getSingleton(String beanName) {

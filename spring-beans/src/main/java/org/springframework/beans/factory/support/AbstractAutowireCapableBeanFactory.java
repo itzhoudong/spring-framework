@@ -508,6 +508,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating instance of bean '" + beanName + "'");
 		}
+		// mbdToUse 将用于创建 bean
 		RootBeanDefinition mbdToUse = mbd;
 
 		// Make sure bean class is actually resolved at this point, and
@@ -597,6 +598,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		synchronized (mbd.postProcessingLock) {
 			if (!mbd.postProcessed) {
 				try {
+					// 执行BeanPostProcessor
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}
 				catch (Throwable ex) {
@@ -610,8 +612,13 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
 		// earlySingletonExposure 表示是否提前暴露原始对象的引用，用于解决循环依赖
-		// 对于单例bean，该变量一般为true，但你也可以通过属性 allowCircularReferences==false 关闭循环引用
+		// 对于单例bean，该变量一般为true，但也可以通过属性 allowCircularReferences==false 关闭循环引用
 		// isSingletonCurrentlyInCreation(beanName) 表示当前bean必须在创建中才行
+		// 1.如果该 bean 是单例 bean（mbd.isSingleton()），
+		// 2.并且允许循环依赖（this.allowCircularReferences），
+		// 3.并且当前 bean 正在创建过程中（isSingletonCurrentlyInCreation(beanName)），
+		// 4.那么就就允许提前暴露该单例 bean（earlySingletonExposure = true），
+		// 5.则会执行 addSingletonFactory(beanName, () -> getEarlyBeanReference(beanName, mbd, bean)) 方法将该 bean 放到三级缓存 singletonFactories 中
 		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
 				isSingletonCurrentlyInCreation(beanName));
 		// 允许暴露，把对象A绑定到ObjectFactory上，注册到三级缓存singletonFactories里面去保存
@@ -1726,6 +1733,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 							mbd.getResourceDescription(), beanName, "Error setting property values", ex);
 				}
 			}
+			// 获取bean对象属性
 			original = mpvs.getPropertyValueList();
 		}
 		else {
