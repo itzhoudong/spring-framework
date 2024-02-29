@@ -1,7 +1,5 @@
 package org.springframework.debug.spring.cache;
 
-import org.springframework.stereotype.Component;
-
 /**
  * @Author: zhoudong
  * @Description:
@@ -20,5 +18,9 @@ public class AService {
 	public void setbService(BService bService) {
 		this.bService = bService;
 		System.out.println("A 里面设置了 B");
+	}
+
+	public AService(){
+		System.out.println("---A created success");
 	}
 }

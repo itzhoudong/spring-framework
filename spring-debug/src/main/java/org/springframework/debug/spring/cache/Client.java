@@ -12,10 +12,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Client {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring.xml");
+		//BeanFactory beanFactory = new ClassPathXmlApplicationContext("spring.xml");
 		AService aService = applicationContext.getBean(AService.class);
 		System.out.println(aService.getbService());
 		BService bService = applicationContext.getBean(BService.class);
 		System.out.println(bService.getaService());
+
 
 		// 创建 serviceA
 		//AService aService = new AService();
