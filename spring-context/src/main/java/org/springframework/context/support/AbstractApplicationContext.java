@@ -549,18 +549,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @date: 2023-09-12 21:16
 	 *
 	 * TODO: refresh()中一共12个方法
-	 * prepareRefresh()： 准备刷新上下文环境。作用就是初始化一些状态和属性, 后后续的工作做准备。
-	 * obtainFreshBeanFactory()：字面意思是获取新鲜的BeanFactory，这里获取到的BeanFactory是DefaultListableBeanFactory。获取到BeanFactory之后ApplicationContext就具备了BeanFactory的各项功能，可以对Bean进行各种基础操作。
-	 * prepareBeanFactory()：BeanFactory的准备工作。对各种属性进行填充。
-	 * postProcessBeanFactory()：对获取的BeanFactory做后置增强处理，默认没有实现，子类覆盖方法做额外处理。但是在WEB中这里是有具体实现的。模板方法设计模式。
-	 * invokeBeanFactoryPostProcessors()：调用各种BeanFactory增强处理器BeanFactoryPostProcessor及其子接口BeanDefinitionRegistryPostProcessor。注意，这里调用的各种BeanFactory的增强处理器是在Bean实例化之前。
-	 * registerBeanPostProcessors()：注册BeanPostProcessor处理器。这里只是单纯的注册功能, 真正调用的是 getBean()方法。
-	 * initMessageSource()：为上下文初始化Message源, 即不同语言的消息体做国际化处理。
-	 * initApplicationEventMulticaster()：初始化事件监听多路广播器。
-	 * onRefresh()：预留给子类, 用于初始化其他的 Bean。
-	 * registerListeners()：在所有注册的Bean中查找listener beans并注册到消息消息广播中。
-	 * finishBeanFactoryInitialization()：初始化剩下的单实例Bean(非惰性)。
-	 * finishRefresh()：完成容器刷新。通知生命周期处理器lifecycle processor刷新过程。同时发出 ContextRefreshEvent告知别人容器已完成刷新。
+	 * 	prepareRefresh()： 准备刷新上下文环境。作用就是初始化一些状态和属性, 后后续的工作做准备。
+	 * 	obtainFreshBeanFactory()：字面意思是获取新鲜的BeanFactory，这里获取到的BeanFactory是DefaultListableBeanFactory。获取到BeanFactory之后ApplicationContext就具备了BeanFactory的各项功能，可以对Bean进行各种基础操作。
+	 * 	prepareBeanFactory()：BeanFactory的准备工作。对各种属性进行填充。
+	 * 	postProcessBeanFactory()：对获取的BeanFactory做后置增强处理，默认没有实现，子类覆盖方法做额外处理。但是在WEB中这里是有具体实现的。模板方法设计模式。
+	 * 	invokeBeanFactoryPostProcessors()：调用各种BeanFactory增强处理器BeanFactoryPostProcessor及其子接口BeanDefinitionRegistryPostProcessor。注意，这里调用的各种BeanFactory的增强处理器是在Bean实例化之前。
+	 * 	registerBeanPostProcessors()：注册BeanPostProcessor处理器。这里只是单纯的注册功能, 真正调用的是 getBean()方法。
+	 * 	initMessageSource()：为上下文初始化Message源, 即不同语言的消息体做国际化处理。
+	 * 	initApplicationEventMulticaster()：初始化事件监听多路广播器。
+	 * 	onRefresh()：预留给子类, 用于初始化其他的 Bean。
+	 * 	registerListeners()：在所有注册的Bean中查找listener beans并注册到消息消息广播中。
+	 * 	finishBeanFactoryInitialization()：初始化剩下的单实例Bean(非惰性)。
+	 * 	finishRefresh()：完成容器刷新。通知生命周期处理器lifecycle processor刷新过程。同时发出 ContextRefreshEvent告知别人容器已完成刷新。
 	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
